@@ -4,33 +4,34 @@ declare(strict_types=1);
 
 namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\PhpFastCache;
 
-use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
+use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractMemcachedCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
-use PhpBench\Benchmark\Metadata\Annotations\{
-    AfterClassMethods,
+use PB\Cli\SmartBench\Config\AppConfig;
+use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
     Iterations,
     OutputTimeUnit,
-    Revs
-};
+    Revs,
+    Sleep,
+    Warmup};
 use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Drivers\Files\Config;
+use Phpfastcache\Drivers\Memcached\Config;
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
  *
  * @BeforeClassMethods({"initFakeData"})
- * @AfterClassMethods({"flushFilesystem"})
+ * @AfterClassMethods({"flushMemcached"})
  */
-class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
+class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'phpfastcache-filesystem';
+    const CACHE_KEY_PREFIX = 'phpfastcache-memcached';
 
     /**
      * Init cache adapter.
@@ -43,7 +44,9 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write", "phpfastcache", "filesystem"})
+     * @Groups({"cache_write", "phpfastcache", "memcached"})
+     * @Sleep(1000000)
+     * @Warmup(2)
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -56,7 +59,9 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write_tag", "phpfastcache", "filesystem"})
+     * @Groups({"cache_write_tag", "phpfastcache", "memcached"})
+     * @Sleep(1000000)
+     * @Warmup(2)
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -70,7 +75,9 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "phpfastcache", "filesystem"})
+     * @Groups({"cache_read", "phpfastcache", "memcached"})
+     * @Sleep(1000000)
+     * @Warmup(2)
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -83,7 +90,9 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tag", "phpfastcache", "filesystem"})
+     * @Groups({"invalidate_tag", "phpfastcache", "memcached"})
+     * @Sleep(1000000)
+     * @Warmup(2)
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -106,8 +115,11 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
      */
     private static function createAdapter(): ExtendedCacheItemPoolInterface
     {
-        return CacheManager::getInstance('files', new Config([
-            'path' => self::CACHE_DIR,
+        $config = AppConfig::getInstance()->getMemcacheConfig();
+
+        return CacheManager::getInstance(' memcached', new Config([
+            'host' => $config['host'],
+            'port' => $config['port'],
         ]));
     }
 }

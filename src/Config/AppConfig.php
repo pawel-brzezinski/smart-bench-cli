@@ -66,4 +66,14 @@ class AppConfig
     {
         return $this->config['redis'];
     }
+
+    /**
+     * Get Memcache config.
+     *
+     * @return array
+     */
+    public function getMemcacheConfig(): array
+    {
+        return $this->config['memcache'];
+    }
 }

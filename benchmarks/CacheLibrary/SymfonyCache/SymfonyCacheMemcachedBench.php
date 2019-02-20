@@ -4,32 +4,33 @@ declare(strict_types=1);
 
 namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCache;
 
-use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
+use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractMemcachedCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
-use PhpBench\Benchmark\Metadata\Annotations\{
-    AfterClassMethods,
+use PB\Cli\SmartBench\Connection\MemcachedConnection;
+use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
     Iterations,
     OutputTimeUnit,
-    Revs
-};
-use Symfony\Component\Cache\Adapter\{FilesystemAdapter, TagAwareAdapter};
+    Revs,
+    Sleep,
+    Warmup};
+use Symfony\Component\Cache\Adapter\MemcachedAdapter;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
  *
- *
  * @BeforeClassMethods({"initFakeData"})
- * @AfterClassMethods({"flushFilesystem"})
+ * @AfterClassMethods({"flushMemcached"})
  */
-class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
+class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'symfony-filesystem';
+    const CACHE_KEY_PREFIX = 'symfony-memcached';
 
     /**
      * Init cache adapter.
@@ -50,7 +51,9 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write", "symfony", "filesystem"})
+     * @Groups({"cache_write", "symfony", "memcached"})
+     * @Sleep(1000000)
+     * @Warmup(2)
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -63,7 +66,9 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write_tag", "symfony", "filesystem"})
+     * @Groups({"cache_write_tag", "symfony", "memcached"})
+     * @Sleep(1000000)
+     * @Warmup(2)
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -77,7 +82,9 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "symfony", "filesystem"})
+     * @Groups({"cache_read", "symfony", "memcached"})
+     * @Sleep(1000000)
+     * @Warmup(2)
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -90,7 +97,9 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "symfony", "filesystem"})
+     * @Groups({"cache_read", "symfony", "memcached"})
+     * @Sleep(1000000)
+     * @Warmup(2)
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -103,7 +112,9 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tag", "symfony", "filesystem"})
+     * @Groups({"invalidate_tag", "symfony", "memcached"})
+     * @Sleep(1000000)
+     * @Warmup(2)
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -115,11 +126,11 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * Create adapter.
      *
-     * @return FilesystemAdapter
+     * @return MemcachedAdapter
      */
-    private static function createAdapter(): FilesystemAdapter
+    private static function createAdapter(): MemcachedAdapter
     {
-        return new FilesystemAdapter(self::CACHE_KEY_PREFIX, 0,self::CACHE_DIR);
+        return new MemcachedAdapter(MemcachedConnection::connect());
     }
 
     /**
