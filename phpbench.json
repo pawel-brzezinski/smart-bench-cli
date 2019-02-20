@@ -5,7 +5,8 @@
         "cache_library": {
             "extends": "aggregate",
             "title": "PHP cache libraries benchmark",
-            "description": "Benchmark for PHP cache libraries"
+            "description": "Benchmark for PHP cache libraries",
+            "cols": [ "benchmark", "subject", "its", "revs", "mem_peak", "best", "worst", "mode" ]
         }
     }
 }

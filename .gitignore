@@ -1,6 +1,5 @@
 # composer
 /composer.phar
-/composer.local.json
 /composer.lock
 /vendor
 
