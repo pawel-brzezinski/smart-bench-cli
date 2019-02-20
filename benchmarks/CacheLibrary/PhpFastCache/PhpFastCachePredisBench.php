@@ -22,7 +22,7 @@ use Phpfastcache\Drivers\Predis\Config;
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
  *
- * @BeforeClassMethods({"initRedisData"})
+ * @BeforeClassMethods({"initFakeData"})
  * @AfterClassMethods({"flushRedis"})
  */
 class PhpFastCachePredisBench extends AbstractRedisCacheLibraryBench

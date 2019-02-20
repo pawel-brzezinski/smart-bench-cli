@@ -36,7 +36,7 @@ trait Psr16Trait
      * @throws \Psr\Cache\InvalidArgumentException
      * @throws \ReflectionException
      */
-    public static function initRedisData()
+    public static function initFakeData()
     {
         /** @var CacheItemPoolInterface $cache */
         $cache = self::createAdapter();

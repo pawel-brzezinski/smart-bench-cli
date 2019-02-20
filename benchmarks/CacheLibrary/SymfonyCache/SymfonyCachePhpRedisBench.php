@@ -21,7 +21,7 @@ use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
  *
- * @BeforeClassMethods({"initRedisData"})
+ * @BeforeClassMethods({"initFakeData"})
  * @AfterClassMethods({"flushRedis"})
  */
 class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench

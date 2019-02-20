@@ -4,30 +4,32 @@ declare(strict_types=1);
 
 namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCache;
 
-use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractRedisCacheLibraryBench;
+use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
-use PB\Cli\SmartBench\Connection\PredisConnection;
-use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{
+    AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
     Iterations,
     OutputTimeUnit,
-    Revs};
-use Symfony\Component\Cache\Adapter\{RedisAdapter, TagAwareAdapter};
+    Revs
+};
+use Symfony\Component\Cache\Adapter\{FilesystemAdapter, TagAwareAdapter};
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
  *
+ *
  * @BeforeClassMethods({"initFakeData"})
- * @AfterClassMethods({"flushRedis"})
+ * @AfterClassMethods({"flushFilesystem"})
  */
-class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
+class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'symfony-predis';
+    const CACHE_KEY_PREFIX = 'symfony-filesystem';
 
     /**
      * Init cache adapter with usage of \Redis connection.
@@ -48,7 +50,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write", "symfony", "predis"})
+     * @Groups({"cache_write", "symfony", "filesystem"})
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -61,7 +63,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write_tag", "symfony", "predis"})
+     * @Groups({"cache_write_tag", "symfony", "filesystem"})
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -75,7 +77,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "symfony", "predis"})
+     * @Groups({"cache_read", "symfony", "filesystem"})
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -88,7 +90,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "symfony", "predis"})
+     * @Groups({"cache_read", "symfony", "filesystem"})
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -101,7 +103,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tag", "symfony", "predis"})
+     * @Groups({"invalidate_tag", "symfony", "filesystem"})
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -113,11 +115,11 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * Create adapter.
      *
-     * @return RedisAdapter
+     * @return FilesystemAdapter
      */
-    private static function createAdapter(): RedisAdapter
+    private static function createAdapter(): FilesystemAdapter
     {
-        return new RedisAdapter(PredisConnection::connect());
+        return new FilesystemAdapter(self::CACHE_KEY_PREFIX, 0,self::CACHE_DIR);
     }
 
     /**

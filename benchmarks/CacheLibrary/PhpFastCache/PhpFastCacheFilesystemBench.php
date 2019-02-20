@@ -4,32 +4,33 @@ declare(strict_types=1);
 
 namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\PhpFastCache;
 
-use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractRedisCacheLibraryBench;
+use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
-use PB\Cli\SmartBench\Config\AppConfig;
-use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{
+    AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
     Iterations,
     OutputTimeUnit,
-    Revs};
+    Revs
+};
 use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Drivers\Redis\Config;
+use Phpfastcache\Drivers\Files\Config;
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
  *
  * @BeforeClassMethods({"initFakeData"})
- * @AfterClassMethods({"flushRedis"})
+ * @AfterClassMethods({"flushFilesystem"})
  */
-class PhpFastCachePhpRedisBench extends AbstractRedisCacheLibraryBench
+class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'phpfastcache-phpredis';
+    const CACHE_KEY_PREFIX = 'phpfastcache-filesystem';
 
     /**
      * Init cache adapter with usage of \Redis connection.
@@ -42,7 +43,7 @@ class PhpFastCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write", "phpfastcache", "phpredis"})
+     * @Groups({"cache_write", "phpfastcache", "filesystem"})
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -55,7 +56,7 @@ class PhpFastCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write_tag", "phpfastcache", "phpredis"})
+     * @Groups({"cache_write_tag", "phpfastcache", "filesystem"})
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -69,7 +70,7 @@ class PhpFastCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "phpfastcache", "phpredis"})
+     * @Groups({"cache_read", "phpfastcache", "filesystem"})
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -82,7 +83,7 @@ class PhpFastCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tag", "phpfastcache", "phpredis"})
+     * @Groups({"invalidate_tag", "phpfastcache", "filesystem"})
      * @Revs(10000)
      * @Iterations(5)
      */
@@ -105,13 +106,8 @@ class PhpFastCachePhpRedisBench extends AbstractRedisCacheLibraryBench
      */
     private static function createAdapter(): ExtendedCacheItemPoolInterface
     {
-        $config = AppConfig::getInstance()->getRedisConfig();
-
-        return CacheManager::getInstance('redis', new Config([
-            'host' => $config['host'],
-            'port' => $config['port'],
-            'database' => $config['database'],
-            'timeout' => $config['timeout'],
+        return CacheManager::getInstance('files', new Config([
+            'path' => self::CACHE_DIR,
         ]));
     }
 }
