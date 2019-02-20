@@ -1,0 +1,23 @@
+# composer
+/composer.phar
+/composer.local.json
+/composer.lock
+/vendor
+
+# IDEs
+/.idea
+*.iml
+*~
+
+# System files
+.DS_Store
+
+# Tests
+/.php_cs.cache
+/infection.json
+/phpunit.xml
+/tests/coverage
+/tests/infection
+
+# Application
+/app/config.yaml.dist

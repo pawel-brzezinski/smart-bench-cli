@@ -1,0 +1,11 @@
+{
+    "bootstrap": "vendor/autoload.php",
+    "path": "benchmarks",
+    "reports": {
+        "cache_library": {
+            "extends": "aggregate",
+            "title": "PHP cache libraries benchmark",
+            "description": "Benchmark for PHP cache libraries"
+        }
+    }
+}

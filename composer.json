@@ -1,0 +1,46 @@
+{
+    "name": "pawel-brzezinski/smart-bench-cli",
+    "description": "CLI application with predefined benchmarks.",
+    "type": "cli-application",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Paweł Brzeziński",
+            "email": "pawel.brzezinski@smartint.pl"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "PB\\Cli\\SmartBench\\": "src/",
+            "PB\\Cli\\SmartBench\\Benchmark\\": "benchmarks/",
+            "PB\\Cli\\SmartBench\\Tests\\": "tests/"
+        },
+        "exclude-from-classmap": [
+            "/tests/",
+            "/benchmarks/"
+        ]
+    },
+    "require": {
+        "php": "^7.2",
+        "ext-redis": "*",
+        "pawel-brzezinski/smart-cache-component": "dev-master",
+        "phpbench/phpbench": "^0.15.0",
+        "symfony/yaml": "^4.2",
+        "symfony/cache": "^4.2",
+        "wikimedia/composer-merge-plugin": "^1.4",
+        "predis/predis": "^1.1",
+        "phpfastcache/phpfastcache": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": [
+                "composer.local.json"
+            ],
+            "replace": true
+        }
+    }
+}
