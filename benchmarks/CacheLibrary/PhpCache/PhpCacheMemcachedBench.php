@@ -2,22 +2,20 @@
 
 declare(strict_types=1);
 
-namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\PhpFastCache;
+namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\PhpCache;
 
+use Cache\Adapter\Memcached\MemcachedCachePool;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractMemcachedCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
-use PB\Cli\SmartBench\Config\AppConfig;
-use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
+use PB\Cli\SmartBench\Connection\MemcachedConnection;
+use PhpBench\Benchmark\Metadata\Annotations\{
+    AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
     OutputTimeUnit,
-    Sleep,
-    Warmup};
-use Phpfastcache\CacheManager;
-use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use Phpfastcache\Drivers\Memcached\Config;
+};
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
@@ -25,11 +23,11 @@ use Phpfastcache\Drivers\Memcached\Config;
  * @BeforeClassMethods({"initFakeData"})
  * @AfterClassMethods({"flushMemcached"})
  */
-class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
+class PhpCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'phpfastcache_memcached';
+    const CACHE_KEY_PREFIX = 'phpcache_memcached';
 
     /**
      * Init cache adapter.
@@ -42,9 +40,7 @@ class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write", "phpfastcache", "memcached", "memcached_write"})
-     * @Sleep(1000000)
-     * @Warmup(2)
+     * @Groups({"write", "phpcache", "memcached", "memcached_write"})
      */
     public function benchWriteToCache()
     {
@@ -55,9 +51,7 @@ class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write_tag", "phpfastcache", "memcached", "memcached_write_tag"})
-     * @Sleep(1000000)
-     * @Warmup(2)
+     * @Groups({"write_tag", "phpcache", "memcached", "memcached_write_tag"})
      */
     public function benchWriteToTagCache()
     {
@@ -69,9 +63,7 @@ class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"read", "phpfastcache", "memcached", "memcached_read"})
-     * @Sleep(1000000)
-     * @Warmup(2)
+     * @Groups({"read", "phpcache", "memcached", "memcached_read"})
      */
     public function benchReadFromCache()
     {
@@ -82,34 +74,20 @@ class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tags", "phpfastcache", "memcached", "memcached_invalidate_tags"})
-     * @Sleep(1000000)
-     * @Warmup(2)
+     * @Groups({"invalidate_tags", "phpcache", "memcached", "memcached_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()
     {
-        $this->cache->deleteItemsByTags(CacheLibraryConstant::CACHE_TAGS);
+        $this->cache->invalidateTags(CacheLibraryConstant::CACHE_TAGS);
     }
 
     /**
      * Create adapter.
      *
-     * @return ExtendedCacheItemPoolInterface
-     *
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverCheckException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException
-     * @throws \ReflectionException
+     * @return MemcachedCachePool
      */
-    private static function createAdapter(): ExtendedCacheItemPoolInterface
+    private static function createAdapter(): MemcachedCachePool
     {
-        $config = AppConfig::getInstance()->getMemcacheConfig();
-
-        return CacheManager::getInstance(' memcached', new Config([
-            'host' => $config['host'],
-            'port' => $config['port'],
-        ]));
+        return new MemcachedCachePool(MemcachedConnection::connect());
     }
 }

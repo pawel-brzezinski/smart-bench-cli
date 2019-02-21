@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCache;
+namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\PhpCache;
 
+use Cache\Adapter\Redis\RedisCachePool;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractRedisCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
@@ -13,10 +14,8 @@ use PhpBench\Benchmark\Metadata\Annotations\{
     BeforeClassMethods,
     BeforeMethods,
     Groups,
-    OutputTimeUnit
+    OutputTimeUnit,
 };
-use Symfony\Component\Cache\Adapter\RedisAdapter;
-use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
@@ -24,14 +23,14 @@ use Symfony\Component\Cache\Adapter\TagAwareAdapter;
  * @BeforeClassMethods({"initFakeData"})
  * @AfterClassMethods({"flushRedis"})
  */
-class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
+class PhpCachePhpRedisBench extends AbstractRedisCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'symfony_phpredis';
+    const CACHE_KEY_PREFIX = 'phpcache_phpredis';
 
     /**
-     * Init cache adapter with usage of \Redis connection.
+     * Init cache adapter.
      */
     public function initCache(): void
     {
@@ -39,17 +38,9 @@ class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     }
 
     /**
-     * Init tag cache adapter with usage of \Redis connection.
-     */
-    public function initTagCache(): void
-    {
-        $this->cache = self::createTagAdapter();
-    }
-
-    /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write", "symfony", "phpredis", "phpredis_write"})
+     * @Groups({"write", "phpcache", "phpredis", "phpredis_write"})
      */
     public function benchWriteToCache()
     {
@@ -58,21 +49,21 @@ class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     }
 
     /**
-     * @BeforeMethods({"initTagCache", "initWriteCache"})
+     * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write_tag", "symfony", "phpredis", "phpredis_write_tag"})
+     * @Groups({"write_tag", "phpcache", "phpredis", "phpredis_write_tag"})
      */
     public function benchWriteToTagCache()
     {
         $this->cacheItem->set($this->cacheItemValue);
-        $this->cacheItem->tag(CacheLibraryConstant::CACHE_TAGS);
+        $this->cacheItem->setTags(CacheLibraryConstant::CACHE_TAGS);
         $this->cache->save($this->cacheItem);
     }
 
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"read", "symfony", "phpredis", "phpredis_read"})
+     * @Groups({"read", "phpcache", "phpredis", "phpredis_read"})
      */
     public function benchReadFromCache()
     {
@@ -81,20 +72,9 @@ class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     }
 
     /**
-     * @BeforeMethods({"initTagCache"})
+     * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"read", "symfony", "phpredis", "phpredis_read"})
-     */
-    public function benchReadFromTagCache()
-    {
-        $cacheKey = self::generateCacheKey((string) rand(1, CacheLibraryConstant::ITEMS_COUNT), self::CACHE_KEY_PREFIX);
-        $this->cache->getItem($cacheKey);
-    }
-
-    /**
-     * @BeforeMethods({"initTagCache"})
-     * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tags", "symfony", "phpredis", "phpredis_invalidate_tags"})
+     * @Groups({"invalidate_tags", "phpcache", "phpredis", "phpredis_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()
     {
@@ -104,20 +84,10 @@ class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * Create adapter.
      *
-     * @return RedisAdapter
+     * @return RedisCachePool
      */
-    private static function createAdapter(): RedisAdapter
+    private static function createAdapter(): RedisCachePool
     {
-        return new RedisAdapter(PhpRedisConnection::connect());
-    }
-
-    /**
-     * Create tag adapter.
-     *
-     * @return TagAwareAdapter
-     */
-    private static function createTagAdapter(): TagAwareAdapter
-    {
-        return new TagAwareAdapter(self::createAdapter());
+        return new RedisCachePool(PhpRedisConnection::connect());
     }
 }

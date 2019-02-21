@@ -12,9 +12,7 @@ use PhpBench\Benchmark\Metadata\Annotations\{
     BeforeClassMethods,
     BeforeMethods,
     Groups,
-    Iterations,
     OutputTimeUnit,
-    Revs
 };
 use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
@@ -30,7 +28,7 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'phpfastcache-filesystem';
+    const CACHE_KEY_PREFIX = 'phpfastcache_filesystem';
 
     /**
      * Init cache adapter.
@@ -43,9 +41,7 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write", "phpfastcache", "filesystem"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"write", "phpfastcache", "filesystem", "filesystem_write"})
      */
     public function benchWriteToCache()
     {
@@ -56,9 +52,7 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write_tag", "phpfastcache", "filesystem"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"write_tag", "phpfastcache", "filesystem", "filesystem_write_cache"})
      */
     public function benchWriteToTagCache()
     {
@@ -70,9 +64,7 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "phpfastcache", "filesystem"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"read", "phpfastcache", "filesystem", "filesystem_read"})
      */
     public function benchReadFromCache()
     {
@@ -83,9 +75,7 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tag", "phpfastcache", "filesystem"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"invalidate_tags", "phpfastcache", "filesystem", "filesystem_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()
     {

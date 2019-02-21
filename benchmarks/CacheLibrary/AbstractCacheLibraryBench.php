@@ -45,6 +45,6 @@ abstract class AbstractCacheLibraryBench
      */
     protected static function generateCacheKey(string $key, string $prefix = 'default')
     {
-        return $prefix.'-key-'.$key;
+        return $prefix.'_key_'.$key;
     }
 }

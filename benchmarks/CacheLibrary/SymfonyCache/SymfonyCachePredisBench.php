@@ -8,13 +8,13 @@ use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractRedisCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
 use PB\Cli\SmartBench\Connection\PredisConnection;
-use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{
+    AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
-    Iterations,
-    OutputTimeUnit,
-    Revs};
+    OutputTimeUnit
+};
 use Symfony\Component\Cache\Adapter\{RedisAdapter, TagAwareAdapter};
 
 /**
@@ -27,7 +27,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'symfony-predis';
+    const CACHE_KEY_PREFIX = 'symfony_predis';
 
     /**
      * Init cache adapter with usage of \Redis connection.
@@ -48,9 +48,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write", "symfony", "predis"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"write", "symfony", "predis", "predis_write"})
      */
     public function benchWriteToCache()
     {
@@ -61,9 +59,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write_tag", "symfony", "predis"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"write_tag", "symfony", "predis", "predis_write_tag"})
      */
     public function benchWriteToTagCache()
     {
@@ -75,9 +71,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "symfony", "predis"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"read", "symfony", "predis", "predis_read"})
      */
     public function benchReadFromCache()
     {
@@ -88,9 +82,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "symfony", "predis"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"read", "symfony", "predis", "predis_read"})
      */
     public function benchReadFromTagCache()
     {
@@ -101,9 +93,7 @@ class SymfonyCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tag", "symfony", "predis"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"invalidate_tags", "symfony", "predis", "predis_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()
     {

@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCache;
+namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\PhpCache;
 
+use Cache\Adapter\Filesystem\FilesystemCachePool;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
@@ -12,22 +15,20 @@ use PhpBench\Benchmark\Metadata\Annotations\{
     BeforeClassMethods,
     BeforeMethods,
     Groups,
-    OutputTimeUnit
+    OutputTimeUnit,
 };
-use Symfony\Component\Cache\Adapter\{FilesystemAdapter, TagAwareAdapter};
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
  *
- *
  * @BeforeClassMethods({"initFakeData"})
  * @AfterClassMethods({"flushFilesystem"})
  */
-class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
+class PhpCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'symfony_filesystem';
+    const CACHE_KEY_PREFIX = 'phpcache_filesystem';
 
     /**
      * Init cache adapter.
@@ -38,17 +39,9 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     }
 
     /**
-     * Init tag cache adapter.
-     */
-    public function initTagCache(): void
-    {
-        $this->cache = self::createTagAdapter();
-    }
-
-    /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write", "symfony", "filesystem", "filesystem_write"})
+     * @Groups({"write", "phpcache", "filesystem", "filesystem_write"})
      */
     public function benchWriteToCache()
     {
@@ -57,21 +50,21 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     }
 
     /**
-     * @BeforeMethods({"initTagCache", "initWriteCache"})
+     * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write_tag", "symfony", "filesystem", "filesystem_write_tag"})
+     * @Groups({"write_tag", "phpcache", "filesystem", "filesystem_write_tag"})
      */
     public function benchWriteToTagCache()
     {
         $this->cacheItem->set($this->cacheItemValue);
-        $this->cacheItem->tag(CacheLibraryConstant::CACHE_TAGS);
+        $this->cacheItem->setTags(CacheLibraryConstant::CACHE_TAGS);
         $this->cache->save($this->cacheItem);
     }
 
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"read", "symfony", "filesystem", "filesystem_read"})
+     * @Groups({"read", "phpcache", "filesystem", "filesystem_read"})
      */
     public function benchReadFromCache()
     {
@@ -80,20 +73,9 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     }
 
     /**
-     * @BeforeMethods({"initTagCache"})
+     * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"read", "symfony", "filesystem", "filesystem_read"})
-     */
-    public function benchReadFromTagCache()
-    {
-        $cacheKey = self::generateCacheKey((string) rand(1, CacheLibraryConstant::ITEMS_COUNT), self::CACHE_KEY_PREFIX);
-        $this->cache->getItem($cacheKey);
-    }
-
-    /**
-     * @BeforeMethods({"initTagCache"})
-     * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tags", "symfony", "filesystem", "filesystem_invalidate_tags"})
+     * @Groups({"invalidate_tags", "phpcache", "filesystem", "filesystem_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()
     {
@@ -103,20 +85,13 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * Create adapter.
      *
-     * @return FilesystemAdapter
+     * @return FilesystemCachePool
      */
-    private static function createAdapter(): FilesystemAdapter
+    private static function createAdapter(): FilesystemCachePool
     {
-        return new FilesystemAdapter(self::CACHE_KEY_PREFIX, 0,self::CACHE_DIR);
-    }
+        $adapter = new Local(self::CACHE_DIR);
+        $filesystem = new Filesystem($adapter);
 
-    /**
-     * Create tag adapter.
-     *
-     * @return TagAwareAdapter
-     */
-    private static function createTagAdapter(): TagAwareAdapter
-    {
-        return new TagAwareAdapter(self::createAdapter());
+        return new FilesystemCachePool($filesystem);
     }
 }

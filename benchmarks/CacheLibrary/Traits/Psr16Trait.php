@@ -47,10 +47,8 @@ trait Psr16Trait
 
             $cacheItem = $cache->getItem($cacheKey);
             $cacheItem->set($value);
-            $cache->saveDeferred($cacheItem);
+            $cache->save($cacheItem);
         }
-
-        $cache->commit();
     }
 
     /**
@@ -61,7 +59,7 @@ trait Psr16Trait
      */
     public function initWriteCache(): void
     {
-        $this->cacheItem = $this->cache->getItem('key-'.uniqid());
+        $this->cacheItem = $this->cache->getItem('key_'.uniqid());
         $this->cacheItemValue = self::generateCacheValue();
     }
 }

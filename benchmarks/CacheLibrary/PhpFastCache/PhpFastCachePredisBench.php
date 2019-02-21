@@ -8,13 +8,13 @@ use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractRedisCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
 use PB\Cli\SmartBench\Config\AppConfig;
-use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{
+    AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
-    Iterations,
-    OutputTimeUnit,
-    Revs};
+    OutputTimeUnit
+};
 use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
 use Phpfastcache\Drivers\Predis\Config;
@@ -29,7 +29,7 @@ class PhpFastCachePredisBench extends AbstractRedisCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'phpfastcache-predis';
+    const CACHE_KEY_PREFIX = 'phpfastcache_predis';
 
     /**
      * Init cache adapter with usage of \Redis connection.
@@ -42,9 +42,7 @@ class PhpFastCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write", "phpfastcache", "predis"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"write", "phpfastcache", "predis", "predis_write"})
      */
     public function benchWriteToCache()
     {
@@ -55,9 +53,7 @@ class PhpFastCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write_tag", "phpfastcache", "predis"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"write_tag", "phpfastcache", "predis", "predis_write_tag"})
      */
     public function benchWriteToTagCache()
     {
@@ -69,9 +65,7 @@ class PhpFastCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "phpfastcache", "predis"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"read", "phpfastcache", "predis", "predis_read"})
      */
     public function benchReadFromCache()
     {
@@ -82,9 +76,7 @@ class PhpFastCachePredisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tag", "phpfastcache", "predis"})
-     * @Revs(10000)
-     * @Iterations(5)
+     * @Groups({"invalidate_tags", "phpfastcache", "predis", "predis_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()
     {

@@ -8,15 +8,15 @@ use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractMemcachedCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
 use PB\Cli\SmartBench\Connection\MemcachedConnection;
-use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{
+    AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
-    Iterations,
     OutputTimeUnit,
-    Revs,
     Sleep,
-    Warmup};
+    Warmup
+};
 use Symfony\Component\Cache\Adapter\MemcachedAdapter;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 
@@ -30,7 +30,7 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
 {
     use Psr16Trait;
 
-    const CACHE_KEY_PREFIX = 'symfony-memcached';
+    const CACHE_KEY_PREFIX = 'symfony_memcached';
 
     /**
      * Init cache adapter.
@@ -51,11 +51,9 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write", "symfony", "memcached"})
+     * @Groups({"write", "symfony", "memcached", "memcached_write"})
      * @Sleep(1000000)
      * @Warmup(2)
-     * @Revs(10000)
-     * @Iterations(5)
      */
     public function benchWriteToCache()
     {
@@ -66,11 +64,9 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_write_tag", "symfony", "memcached"})
+     * @Groups({"write_tag", "symfony", "memcached", "memcached_write_tag"})
      * @Sleep(1000000)
      * @Warmup(2)
-     * @Revs(10000)
-     * @Iterations(5)
      */
     public function benchWriteToTagCache()
     {
@@ -82,11 +78,9 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "symfony", "memcached"})
+     * @Groups({"read", "symfony", "memcached", "memcached_read"})
      * @Sleep(1000000)
      * @Warmup(2)
-     * @Revs(10000)
-     * @Iterations(5)
      */
     public function benchReadFromCache()
     {
@@ -97,11 +91,9 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"cache_read", "symfony", "memcached"})
+     * @Groups({"read", "symfony", "memcached", "memcached_read"})
      * @Sleep(1000000)
      * @Warmup(2)
-     * @Revs(10000)
-     * @Iterations(5)
      */
     public function benchReadFromTagCache()
     {
@@ -112,11 +104,9 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tag", "symfony", "memcached"})
+     * @Groups({"tag", "symfony", "memcached", "memcached_invalidate_tags"})
      * @Sleep(1000000)
      * @Warmup(2)
-     * @Revs(10000)
-     * @Iterations(5)
      */
     public function benchInvalidateCacheTag()
     {
