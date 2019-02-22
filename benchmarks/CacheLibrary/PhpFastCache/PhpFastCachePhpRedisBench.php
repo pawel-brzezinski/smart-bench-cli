@@ -6,7 +6,7 @@ namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\PhpFastCache;
 
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractRedisCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
-use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
+use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
 use PB\Cli\SmartBench\Config\AppConfig;
 use PhpBench\Benchmark\Metadata\Annotations\{
     AfterClassMethods,
@@ -27,7 +27,7 @@ use Phpfastcache\Drivers\Redis\Config;
  */
 class PhpFastCachePhpRedisBench extends AbstractRedisCacheLibraryBench
 {
-    use Psr16Trait;
+    use Psr6Trait;
 
     const CACHE_KEY_PREFIX = 'phpfastcache_phpredis';
 

@@ -10,7 +10,7 @@ use MatthiasMullie\Scrapbook\Adapters\Flysystem;
 use MatthiasMullie\Scrapbook\Psr6\Pool;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
-use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
+use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
 use PhpBench\Benchmark\Metadata\Annotations\{
     AfterClassMethods,
     BeforeClassMethods,
@@ -27,7 +27,7 @@ use PhpBench\Benchmark\Metadata\Annotations\{
  */
 class ScrapbookFilesystemBench extends AbstractFilesystemCacheLibraryBench
 {
-    use Psr16Trait;
+    use Psr6Trait;
 
     const CACHE_KEY_PREFIX = 'scrapbook_filesystem';
 

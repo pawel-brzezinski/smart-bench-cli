@@ -9,11 +9,11 @@ use PB\Cli\SmartBench\Model\Book;
 use Psr\Cache\{CacheItemInterface, CacheItemPoolInterface};
 
 /**
- * PSR-16 trait.
+ * PSR-6 trait.
  *
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
  */
-trait Psr16Trait
+trait Psr6Trait
 {
     /**
      * @var CacheItemPoolInterface

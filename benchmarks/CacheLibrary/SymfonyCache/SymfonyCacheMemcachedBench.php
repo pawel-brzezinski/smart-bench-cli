@@ -6,7 +6,7 @@ namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCache;
 
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractMemcachedCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
-use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
+use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
 use PB\Cli\SmartBench\Connection\MemcachedConnection;
 use PhpBench\Benchmark\Metadata\Annotations\{
     AfterClassMethods,
@@ -28,7 +28,7 @@ use Symfony\Component\Cache\Adapter\TagAwareAdapter;
  */
 class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
 {
-    use Psr16Trait;
+    use Psr6Trait;
 
     const CACHE_KEY_PREFIX = 'symfony_memcached';
 

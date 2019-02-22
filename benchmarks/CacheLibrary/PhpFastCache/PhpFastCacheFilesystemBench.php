@@ -6,7 +6,7 @@ namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\PhpFastCache;
 
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
-use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr16Trait;
+use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
 use PhpBench\Benchmark\Metadata\Annotations\{
     AfterClassMethods,
     BeforeClassMethods,
@@ -26,7 +26,7 @@ use Phpfastcache\Drivers\Files\Config;
  */
 class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
 {
-    use Psr16Trait;
+    use Psr6Trait;
 
     const CACHE_KEY_PREFIX = 'phpfastcache_filesystem';
 
