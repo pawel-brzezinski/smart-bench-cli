@@ -64,11 +64,22 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Groups({"write_tag", "symfony", "memcached", "memcached_write"})
+     */
+    public function benchWriteToTagCacheWithoutTags()
+    {
+        $this->cacheItem->set($this->cacheItemValue);
+        $this->cache->save($this->cacheItem);
+    }
+
+    /**
+     * @BeforeMethods({"initTagCache", "initWriteCache"})
+     * @OutputTimeUnit("milliseconds", precision=3)
      * @Groups({"write_tag", "symfony", "memcached", "memcached_write_tag"})
      * @Sleep(1000000)
      * @Warmup(2)
      */
-    public function benchWriteToTagCache()
+    public function benchWriteToTagCacheWithTags()
     {
         $this->cacheItem->set($this->cacheItemValue);
         $this->cacheItem->tag(CacheLibraryConstant::CACHE_TAGS);

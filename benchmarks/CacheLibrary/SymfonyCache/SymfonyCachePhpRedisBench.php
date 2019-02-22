@@ -60,9 +60,20 @@ class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initTagCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Groups({"write_tag", "symfony", "phpredis", "phpredis_write"})
+     */
+    public function benchWriteToTagCacheWithoutTags()
+    {
+        $this->cacheItem->set($this->cacheItemValue);
+        $this->cache->save($this->cacheItem);
+    }
+
+    /**
+     * @BeforeMethods({"initTagCache", "initWriteCache"})
+     * @OutputTimeUnit("milliseconds", precision=3)
      * @Groups({"write_tag", "symfony", "phpredis", "phpredis_write_tag"})
      */
-    public function benchWriteToTagCache()
+    public function benchWriteToTagCacheWithTags()
     {
         $this->cacheItem->set($this->cacheItemValue);
         $this->cacheItem->tag(CacheLibraryConstant::CACHE_TAGS);
