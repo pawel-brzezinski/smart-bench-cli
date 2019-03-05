@@ -37,13 +37,13 @@ class AppConfigTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGetMemcacheConfig()
+    public function testGetMemcachedConfig()
     {
         // Given
-        $expected = $this->getConfig()['memcache'];
+        $expected = $this->getConfig()['memcached'];
 
         // When
-        $actual = AppConfig::getInstance()->getMemcacheConfig();
+        $actual = AppConfig::getInstance()->getMemcachedConfig();
 
         // Then
         $this->assertSame($expected, $actual);

@@ -67,7 +67,7 @@ class StashMemcachedBench extends AbstractMemcachedCacheLibraryBench
      */
     private static function createAdapter(): Pool
     {
-        $config = AppConfig::getInstance()->getMemcacheConfig();
+        $config = AppConfig::getInstance()->getMemcachedConfig();
 
         $options = ['servers' => [$config['host'], $config['port']]];
         $driver = new Memcache($options);

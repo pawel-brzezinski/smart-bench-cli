@@ -105,7 +105,7 @@ class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
      */
     private static function createAdapter(): ExtendedCacheItemPoolInterface
     {
-        $config = AppConfig::getInstance()->getMemcacheConfig();
+        $config = AppConfig::getInstance()->getMemcachedConfig();
 
         return CacheManager::getInstance(' memcached', new Config([
             'host' => $config['host'],

@@ -18,8 +18,7 @@ class MemcachedConnection implements ConnectionInterface
      */
     public static function connect(): \Memcached
     {
-        $config = AppConfig::getInstance()->getRedisConfig();
-
+        $config = AppConfig::getInstance()->getMemcachedConfig();
         $memcached = new \Memcached();
         $memcached->addServer($config['host'], $config['port']);
 

@@ -72,8 +72,8 @@ class AppConfig
      *
      * @return array
      */
-    public function getMemcacheConfig(): array
+    public function getMemcachedConfig(): array
     {
-        return $this->config['memcache'];
+        return $this->config['memcached'];
     }
 }
