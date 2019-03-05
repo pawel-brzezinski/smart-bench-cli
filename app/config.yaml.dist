@@ -1,8 +1,8 @@
 redis:
     host: 127.0.0.1
     port: 6379
-    database: 2
+    database: 0
     timeout: 5
-memcache:
+memcached:
     host: 127.0.0.1
     port: 11211

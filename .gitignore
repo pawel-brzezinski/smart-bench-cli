@@ -19,4 +19,4 @@
 /tests/infection
 
 # Application
-/app/config.yaml.dist
+/app/config.yaml
