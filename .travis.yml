@@ -1,0 +1,39 @@
+sudo: false
+
+language: php
+
+php:
+    - '7.2'
+    - '7.3'
+
+services:
+    - redis-server
+    - memcached
+
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+before_install:
+    - travis_retry composer selfupdate
+
+before_script:
+    - cp app/config.yaml.dist app/config.yaml
+    - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]]; then wget https://github.com/infection/infection/releases/download/0.12.0/infection.phar; fi
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]]; then wget https://github.com/infection/infection/releases/download/0.12.0/infection.phar.asc; fi
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]]; then chmod +x infection.phar; fi
+    - COMPOSER_MEMORY_LIMIT=-1 travis_wait composer install --dev --prefer-source
+
+script:
+    - ./vendor/bin/phpunit --coverage-clover=coverage.xml
+    - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]]; then ./infection.phar --min-msi=95 --min-covered-msi=100 --threads=4; fi
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
+
+env:
+    global:
+        - secure: zlfIpt68PWNHeJRpGC52xni5j3CdBUa7WyLTKY9ndGKxcQY0pkaL0vps07uvk+G2CCaviCgiHZkTZ3zvF4fty+1Ftqw5il4Q/tE6CodPPjCitzXXx2rbyiaxKPRbOam6aKYW24Lymu3hgZjUu+9yrQwIeUzn7dKVMg9wHoMyPTDqV1KWgzXv/oNbK/53/6hayZPlFWOGxMKgeP/XaZK0TmaadmbM5jW38RnIX/hv3S2Je/bbdovtkuuCVY0pv7nZvQplct/IY3RvgVAxXSezj+3LU6KzubvcIPmOtZ7GLfG6It9Tj4+q4rm/Bqw64+JkiqtX1XfF3V+tyG5SXN4TQYVOb6n6J7D8klzonFBELbymYRRKBAQOr+AV1cm856e4yB/sBNdlOvoB0hGkMFok5NL60+8zozTv9Lr5NhYHxNuxgDU/cs1xINN8zJGhSyv4yUPNVSp0jDmzVpv07RWDd6KY3CEJ60VzUb3lzplfnp7cIkGVBpufOjNO2lEIJh6LsxAiNn3MR2pCOfJV/RoT1Q5W0TkRBHidWmJWrEv2UC+ayKbxD+XCsn34+ZegJQ+pFRIQo7Q7g6T266zMN18G40fktY7Vndg9ZpC7E6F9LtDUNm+7BFbZWnmzIS6Tvh3yoTCPgVhW+JaFwT76I6Wocwnm5YWHEs7S6gfLnCgOv3o=
+        - secure: bYBaYXUoczIYSfPu3EbGsJ8iJ9NLaNMlgp18HGvcr0KFidprhRRgmNApTsY2hsYTIUg3qv6KpYoNq0R+E/Fg7YIFMpzA3AiCn7cAHWsBvuOK+lURxnbmnQLcSUqh8KTiLARYWB3HuscF4VNPOxogHEIXy/JgR+iT/m0Ql4duENry3EIUuyZBHnuKWbN0fsaJbqUJX4Ylvfweit7p0zL6rp3jcfhls4PHJAmJJzt+kixWt/QlL7AH2Reh9v27OAOqLh39LpCAUD3x1om64/jCbYxuQqnIPjZvAAjUyMHDQY+rkRqvXOhnlZB/55Y4FT/r8RVOz9ssnPv/GnzJFzNXZtWGoTifbO3h5lGJ9sNv7/542lM/d3kPSFwvWr6owQT0DCbwZEmTkWG5poY86krGbct5MkDczXkgtTr5UeVfNvI4LKbQLOyiGTqAeOr6f65OPAFCBjdG0B93soYUtv0lVgS+Y4BOXeNq3V3/o5TCCXpFDhdC5Vfju1s5qr/DlcZZCa6ydmEPDq2MBdNWZijXzmmrVp11I+WoH/dqs1oQ7mx6gxGbTx3BeR8xUvZcscm0E3UqDtjjhQf3WDnMlLx9f3sKzat/kwr/I/B4V9cvn+Oqoux1rLgRkJuBHGy/tudWvRs8Jy2hIWxqC83d08wY5BIClGUwOfw6oWbsm2J2+DM=
