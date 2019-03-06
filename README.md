@@ -1,4 +1,6 @@
 # SmartBench CLI tool
+[![Build Status](https://travis-ci.com/pawel-brzezinski/smart-bench-cli.svg?branch=master)](https://travis-ci.com/pawel-brzezinski/smart-bench-cli) [![codecov](https://codecov.io/gh/pawel-brzezinski/smart-bench-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/pawel-brzezinski/smart-bench-cli)
+
 PHP CLI application for PHP libraries benchmark tests with use [PHPBench](https://phpbench.readthedocs.io).
 
 **List of benchmarks**
