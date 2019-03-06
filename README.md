@@ -1,4 +1,4 @@
-# SuluBench CLI tool
+# SmartBench CLI tool
 PHP CLI application for PHP libraries benchmark tests with use [PHPBench](https://phpbench.readthedocs.io).
 
 **List of benchmarks**
