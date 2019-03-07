@@ -52,7 +52,7 @@ class PhpFastCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write_tag", "phpfastcache", "filesystem", "filesystem_write_cache"})
+     * @Groups({"write_tag", "phpfastcache", "filesystem", "filesystem_write_tag"})
      */
     public function benchWriteToTagCache()
     {
