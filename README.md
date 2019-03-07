@@ -10,9 +10,9 @@ PHP CLI application for PHP libraries benchmark tests with use [PHPBench](https:
 The basic benchmark of cache libraries with division into several groups.
 
 #### Features
-1. Each benchmark is preceded by injection of **1000** elements of cache storage.
+1. Each benchmark is preceded by injection of **100** elements of cache storage.
 2. Each value saved and read from the cache is an example [Book](src/Model/Book.php) object.
-3. Each task in the benchmark is performed by **5** iteration and **1000** revs by iteration.
+3. Each task in the benchmark is performed by **3** iteration and **50** revs by iteration.
 
 #### Tested libraries
 1. **[PHP Cache](https://www.php-cache.com/)** [write, write with tags, read, invalidate tags]

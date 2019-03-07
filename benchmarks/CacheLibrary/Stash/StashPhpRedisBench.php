@@ -70,7 +70,7 @@ class StashPhpRedisBench extends AbstractRedisCacheLibraryBench
         $config = AppConfig::getInstance()->getRedisConfig();
 
         $options = [
-            'servers' => [$config['host'], $config['port']],
+            'servers' => [[$config['host'], $config['port']]],
             'database' => $config['database'],
             'connect_timeout' => $config['timeout'],
         ];

@@ -11,6 +11,6 @@ namespace PB\Cli\SmartBench\Benchmark\CacheLibrary;
  */
 final class CacheLibraryConstant
 {
-    const ITEMS_COUNT = 1000;
+    const ITEMS_COUNT = 100;
     const CACHE_TAGS = ['foo', 'bar'];
 }
