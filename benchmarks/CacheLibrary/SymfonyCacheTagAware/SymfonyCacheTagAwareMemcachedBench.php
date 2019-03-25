@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCache;
+namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCacheTagAware;
 
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractMemcachedCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
@@ -18,6 +18,7 @@ use PhpBench\Benchmark\Metadata\Annotations\{
     Warmup
 };
 use Symfony\Component\Cache\Adapter\MemcachedAdapter;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
@@ -25,7 +26,7 @@ use Symfony\Component\Cache\Adapter\MemcachedAdapter;
  * @BeforeClassMethods({"initFakeData"})
  * @AfterClassMethods({"flushMemcached"})
  */
-class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
+class SymfonyCacheTagAwareMemcachedBench extends AbstractMemcachedCacheLibraryBench
 {
     use Psr6Trait;
 
@@ -36,13 +37,13 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
      */
     public function initCache(): void
     {
-        $this->cache = self::createAdapter();
+        $this->cache = self::createTagAdapter();
     }
 
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write", "symfony", "memcached", "memcached_write"})
+     * @Groups({"write", "symfony_tag_aware", "memcached", "memcached_write"})
      * @Sleep(1000000)
      * @Warmup(2)
      */
@@ -53,9 +54,23 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     }
 
     /**
+     * @BeforeMethods({"initCache", "initWriteCache"})
+     * @OutputTimeUnit("milliseconds", precision=3)
+     * @Groups({"write_tag", "symfony_tag_aware", "memcached", "memcached_write_tag"})
+     * @Sleep(1000000)
+     * @Warmup(2)
+     */
+    public function benchWriteToTagCacheWithTags()
+    {
+        $this->cacheItem->set($this->cacheItemValue);
+        $this->cacheItem->tag(CacheLibraryConstant::CACHE_TAGS);
+        $this->cache->save($this->cacheItem);
+    }
+
+    /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"read", "symfony", "memcached", "memcached_read"})
+     * @Groups({"read", "symfony_tag_aware", "memcached", "memcached_read"})
      * @Sleep(1000000)
      * @Warmup(2)
      */
@@ -66,6 +81,18 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     }
 
     /**
+     * @BeforeMethods({"initCache"})
+     * @OutputTimeUnit("milliseconds", precision=3)
+     * @Groups({"invalidate_tags", "symfony_tag_aware", "memcached", "memcached_invalidate_tags"})
+     * @Sleep(1000000)
+     * @Warmup(2)
+     */
+    public function benchInvalidateCacheTag()
+    {
+        $this->cache->invalidateTags(CacheLibraryConstant::CACHE_TAGS);
+    }
+
+    /**
      * Create adapter.
      *
      * @return MemcachedAdapter
@@ -73,5 +100,15 @@ class SymfonyCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     private static function createAdapter(): MemcachedAdapter
     {
         return new MemcachedAdapter(MemcachedConnection::connect());
+    }
+
+    /**
+     * Create tag adapter.
+     *
+     * @return TagAwareAdapter
+     */
+    private static function createTagAdapter(): TagAwareAdapter
+    {
+        return new TagAwareAdapter(self::createAdapter());
     }
 }

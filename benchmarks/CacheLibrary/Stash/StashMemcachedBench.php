@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\Scrapbook;
+namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\Stash;
 
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractMemcachedCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;

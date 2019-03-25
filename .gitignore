@@ -19,4 +19,5 @@
 /tests/infection
 
 # Application
+/phpbench.json
 /app/config.yaml

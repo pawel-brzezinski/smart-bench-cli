@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCache;
+namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCacheTagAware;
 
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractRedisCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
@@ -16,6 +16,7 @@ use PhpBench\Benchmark\Metadata\Annotations\{
     OutputTimeUnit
 };
 use Symfony\Component\Cache\Adapter\RedisAdapter;
+use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
@@ -23,7 +24,7 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
  * @BeforeClassMethods({"initFakeData"})
  * @AfterClassMethods({"flushRedis"})
  */
-class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
+class SymfonyCacheTagAwarePhpRedisBench extends AbstractRedisCacheLibraryBench
 {
     use Psr6Trait;
 
@@ -34,13 +35,13 @@ class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
      */
     public function initCache(): void
     {
-        $this->cache = self::createAdapter();
+        $this->cache = self::createTagAdapter();
     }
 
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write", "symfony", "phpredis", "phpredis_write"})
+     * @Groups({"write", "symfony_tag_aware", "phpredis", "phpredis_write"})
      */
     public function benchWriteToCache()
     {
@@ -49,14 +50,36 @@ class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     }
 
     /**
+     * @BeforeMethods({"initCache", "initWriteCache"})
+     * @OutputTimeUnit("milliseconds", precision=3)
+     * @Groups({"write_tag", "symfony_tag_aware", "phpredis", "phpredis_write_tag"})
+     */
+    public function benchWriteToTagCacheWithTags()
+    {
+        $this->cacheItem->set($this->cacheItemValue);
+        $this->cacheItem->tag(CacheLibraryConstant::CACHE_TAGS);
+        $this->cache->save($this->cacheItem);
+    }
+
+    /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"read", "symfony", "phpredis", "phpredis_read"})
+     * @Groups({"read", "symfony_tag_aware", "phpredis", "phpredis_read"})
      */
     public function benchReadFromCache()
     {
         $cacheKey = self::generateCacheKey((string) rand(1, CacheLibraryConstant::ITEMS_COUNT), self::CACHE_KEY_PREFIX);
         $this->cache->getItem($cacheKey);
+    }
+
+    /**
+     * @BeforeMethods({"initCache"})
+     * @OutputTimeUnit("milliseconds", precision=3)
+     * @Groups({"invalidate_tags", "symfony_tag_aware", "phpredis", "phpredis_invalidate_tags"})
+     */
+    public function benchInvalidateCacheTag()
+    {
+        $this->cache->invalidateTags(CacheLibraryConstant::CACHE_TAGS);
     }
 
     /**
@@ -67,5 +90,15 @@ class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     private static function createAdapter(): RedisAdapter
     {
         return new RedisAdapter(PhpRedisConnection::connect());
+    }
+
+    /**
+     * Create tag adapter.
+     *
+     * @return TagAwareAdapter
+     */
+    private static function createTagAdapter(): TagAwareAdapter
+    {
+        return new TagAwareAdapter(self::createAdapter());
     }
 }
