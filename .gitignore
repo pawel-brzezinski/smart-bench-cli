@@ -19,5 +19,6 @@
 /tests/infection
 
 # Application
+/_storage
 /phpbench.json
 /app/config.yaml
