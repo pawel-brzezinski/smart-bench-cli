@@ -7,13 +7,12 @@ namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCacheTagAware;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
-use PhpBench\Benchmark\Metadata\Annotations\{
-    AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
-    OutputTimeUnit
-};
+    OutputTimeUnit,
+    Warmup};
 use Symfony\Component\Cache\Adapter\{FilesystemAdapter, TagAwareAdapter};
 
 /**
@@ -40,6 +39,7 @@ class SymfonyCacheTagAwareFilesystemBench extends AbstractFilesystemCacheLibrary
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write", "symfony_tag_aware", "filesystem", "filesystem_write"})
      */
     public function benchWriteToCache()
@@ -51,6 +51,7 @@ class SymfonyCacheTagAwareFilesystemBench extends AbstractFilesystemCacheLibrary
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write_tag", "symfony_tag_aware", "filesystem", "filesystem_write_tag"})
      */
     public function benchWriteToTagCache()
@@ -63,6 +64,7 @@ class SymfonyCacheTagAwareFilesystemBench extends AbstractFilesystemCacheLibrary
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"read", "symfony_tag_aware", "filesystem", "filesystem_read"})
      */
     public function benchReadFromCache()
@@ -74,6 +76,7 @@ class SymfonyCacheTagAwareFilesystemBench extends AbstractFilesystemCacheLibrary
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"invalidate_tags", "symfony_tag_aware", "filesystem", "filesystem_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()

@@ -11,13 +11,12 @@ use MatthiasMullie\Scrapbook\Psr6\Pool;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
-use PhpBench\Benchmark\Metadata\Annotations\{
-    AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
     OutputTimeUnit,
-};
+    Warmup};
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
@@ -42,6 +41,7 @@ class ScrapbookFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write", "scrapbook", "filesystem", "filesystem_write"})
      */
     public function benchWriteToCache()
@@ -53,6 +53,7 @@ class ScrapbookFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"read", "scrapbook", "filesystem", "filesystem_read"})
      */
     public function benchReadFromCache()

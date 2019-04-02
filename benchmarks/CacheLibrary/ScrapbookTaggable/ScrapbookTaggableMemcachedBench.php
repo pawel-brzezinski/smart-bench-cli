@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\PhpCache;
+namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\ScrapbookTaggable;
 
-use Cache\Adapter\Redis\RedisCachePool;
-use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractRedisCacheLibraryBench;
+use MatthiasMullie\Scrapbook\Adapters\Memcached;
+use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractMemcachedCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
-use PB\Cli\SmartBench\Connection\PhpRedisConnection;
+use PB\Cli\SmartBench\Connection\MemcachedConnection;
+use PB\Extension\Scrapbook\Tag\Psr6\TaggablePool;
 use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
@@ -20,13 +21,13 @@ use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
  *
  * @BeforeClassMethods({"initFakeData"})
- * @AfterClassMethods({"flushRedis"})
+ * @AfterClassMethods({"flushMemcached"})
  */
-class PhpCachePhpRedisBench extends AbstractRedisCacheLibraryBench
+class ScrapbookTaggableMemcachedBench extends AbstractMemcachedCacheLibraryBench
 {
     use Psr6Trait;
 
-    const CACHE_KEY_PREFIX = 'phpcache_phpredis';
+    const CACHE_KEY_PREFIX = 'scrapbook_taggable_memcached';
 
     /**
      * Init cache adapter.
@@ -40,7 +41,7 @@ class PhpCachePhpRedisBench extends AbstractRedisCacheLibraryBench
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
      * @Warmup(2)
-     * @Groups({"write", "phpcache", "phpredis", "phpredis_write"})
+     * @Groups({"write", "scrapbook_taggable", "memcached", "memcached_write"})
      */
     public function benchWriteToCache()
     {
@@ -52,9 +53,9 @@ class PhpCachePhpRedisBench extends AbstractRedisCacheLibraryBench
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
      * @Warmup(2)
-     * @Groups({"write_tag", "phpcache", "phpredis", "phpredis_write_tag"})
+     * @Groups({"write_tag", "scrapbook_taggable", "memcached", "memcached_write_tag"})
      */
-    public function benchWriteToTagCache()
+    public function benchWriteToTagCacheWithTags()
     {
         $this->cacheItem->set($this->cacheItemValue);
         $this->cacheItem->setTags(CacheLibraryConstant::CACHE_TAGS);
@@ -65,7 +66,7 @@ class PhpCachePhpRedisBench extends AbstractRedisCacheLibraryBench
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
      * @Warmup(2)
-     * @Groups({"read", "phpcache", "phpredis", "phpredis_read"})
+     * @Groups({"read", "scrapbook_taggable", "memcached", "memcached_read"})
      */
     public function benchReadFromCache()
     {
@@ -77,7 +78,7 @@ class PhpCachePhpRedisBench extends AbstractRedisCacheLibraryBench
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
      * @Warmup(2)
-     * @Groups({"invalidate_tags", "phpcache", "phpredis", "phpredis_invalidate_tags"})
+     * @Groups({"invalidate_tags", "scrapbook_taggable", "memcached", "memcached_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()
     {
@@ -87,10 +88,12 @@ class PhpCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * Create adapter.
      *
-     * @return RedisCachePool
+     * @return TaggablePool
      */
-    private static function createAdapter(): RedisCachePool
+    private static function createAdapter(): TaggablePool
     {
-        return new RedisCachePool(PhpRedisConnection::connect());
+        $cache = new Memcached(MemcachedConnection::connect());
+
+        return new TaggablePool($cache);
     }
 }

@@ -9,13 +9,12 @@ use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractMemcachedCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
 use PB\Cli\SmartBench\Connection\MemcachedConnection;
-use PhpBench\Benchmark\Metadata\Annotations\{
-    AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
     OutputTimeUnit,
-};
+    Warmup};
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
@@ -40,6 +39,7 @@ class PhpCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write", "phpcache", "memcached", "memcached_write"})
      */
     public function benchWriteToCache()
@@ -51,6 +51,7 @@ class PhpCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write_tag", "phpcache", "memcached", "memcached_write_tag"})
      */
     public function benchWriteToTagCache()
@@ -63,6 +64,7 @@ class PhpCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"read", "phpcache", "memcached", "memcached_read"})
      */
     public function benchReadFromCache()
@@ -74,6 +76,7 @@ class PhpCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"invalidate_tags", "phpcache", "memcached", "memcached_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()

@@ -13,7 +13,6 @@ use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeMethods,
     Groups,
     OutputTimeUnit,
-    Sleep,
     Warmup};
 use Phpfastcache\CacheManager;
 use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
@@ -42,9 +41,8 @@ class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write", "phpfastcache", "memcached", "memcached_write"})
-     * @Sleep(1000000)
      * @Warmup(2)
+     * @Groups({"write", "phpfastcache", "memcached", "memcached_write"})
      */
     public function benchWriteToCache()
     {
@@ -55,9 +53,8 @@ class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write_tag", "phpfastcache", "memcached", "memcached_write_tag"})
-     * @Sleep(1000000)
      * @Warmup(2)
+     * @Groups({"write_tag", "phpfastcache", "memcached", "memcached_write_tag"})
      */
     public function benchWriteToTagCache()
     {
@@ -69,9 +66,8 @@ class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"read", "phpfastcache", "memcached", "memcached_read"})
-     * @Sleep(1000000)
      * @Warmup(2)
+     * @Groups({"read", "phpfastcache", "memcached", "memcached_read"})
      */
     public function benchReadFromCache()
     {
@@ -82,9 +78,8 @@ class PhpFastCacheMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tags", "phpfastcache", "memcached", "memcached_invalidate_tags"})
-     * @Sleep(1000000)
      * @Warmup(2)
+     * @Groups({"invalidate_tags", "phpfastcache", "memcached", "memcached_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()
     {

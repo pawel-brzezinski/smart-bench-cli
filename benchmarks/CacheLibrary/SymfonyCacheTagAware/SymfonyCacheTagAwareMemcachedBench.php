@@ -14,7 +14,6 @@ use PhpBench\Benchmark\Metadata\Annotations\{
     BeforeMethods,
     Groups,
     OutputTimeUnit,
-    Sleep,
     Warmup
 };
 use Symfony\Component\Cache\Adapter\MemcachedAdapter;
@@ -43,9 +42,8 @@ class SymfonyCacheTagAwareMemcachedBench extends AbstractMemcachedCacheLibraryBe
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write", "symfony_tag_aware", "memcached", "memcached_write"})
-     * @Sleep(1000000)
      * @Warmup(2)
+     * @Groups({"write", "symfony_tag_aware", "memcached", "memcached_write"})
      */
     public function benchWriteToCache()
     {
@@ -56,9 +54,8 @@ class SymfonyCacheTagAwareMemcachedBench extends AbstractMemcachedCacheLibraryBe
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"write_tag", "symfony_tag_aware", "memcached", "memcached_write_tag"})
-     * @Sleep(1000000)
      * @Warmup(2)
+     * @Groups({"write_tag", "symfony_tag_aware", "memcached", "memcached_write_tag"})
      */
     public function benchWriteToTagCacheWithTags()
     {
@@ -70,9 +67,8 @@ class SymfonyCacheTagAwareMemcachedBench extends AbstractMemcachedCacheLibraryBe
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"read", "symfony_tag_aware", "memcached", "memcached_read"})
-     * @Sleep(1000000)
      * @Warmup(2)
+     * @Groups({"read", "symfony_tag_aware", "memcached", "memcached_read"})
      */
     public function benchReadFromCache()
     {
@@ -83,9 +79,8 @@ class SymfonyCacheTagAwareMemcachedBench extends AbstractMemcachedCacheLibraryBe
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @Groups({"invalidate_tags", "symfony_tag_aware", "memcached", "memcached_invalidate_tags"})
-     * @Sleep(1000000)
      * @Warmup(2)
+     * @Groups({"invalidate_tags", "symfony_tag_aware", "memcached", "memcached_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()
     {

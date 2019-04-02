@@ -7,12 +7,12 @@ namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\Stash;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
-use PhpBench\Benchmark\Metadata\Annotations\{
-    AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
     OutputTimeUnit,
+    Warmup
 };
 use Stash\Pool;
 
@@ -39,6 +39,7 @@ class StashFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write", "stash", "filesystem", "filesystem_write"})
      */
     public function benchWriteToCache()
@@ -50,6 +51,7 @@ class StashFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"read", "stash", "filesystem", "filesystem_read"})
      */
     public function benchReadFromCache()

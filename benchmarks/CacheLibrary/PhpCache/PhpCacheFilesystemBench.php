@@ -10,13 +10,12 @@ use League\Flysystem\Filesystem;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
-use PhpBench\Benchmark\Metadata\Annotations\{
-    AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
     OutputTimeUnit,
-};
+    Warmup};
 
 /**
  * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
@@ -41,6 +40,7 @@ class PhpCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write", "phpcache", "filesystem", "filesystem_write"})
      */
     public function benchWriteToCache()
@@ -52,6 +52,7 @@ class PhpCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write_tag", "phpcache", "filesystem", "filesystem_write_tag"})
      */
     public function benchWriteToTagCache()
@@ -64,6 +65,7 @@ class PhpCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"read", "phpcache", "filesystem", "filesystem_read"})
      */
     public function benchReadFromCache()
@@ -75,6 +77,7 @@ class PhpCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"invalidate_tags", "phpcache", "filesystem", "filesystem_invalidate_tags"})
      */
     public function benchInvalidateCacheTag()

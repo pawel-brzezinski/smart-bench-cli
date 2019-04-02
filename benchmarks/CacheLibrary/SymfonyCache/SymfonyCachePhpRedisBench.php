@@ -8,13 +8,12 @@ use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractRedisCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
 use PB\Cli\SmartBench\Connection\PhpRedisConnection;
-use PhpBench\Benchmark\Metadata\Annotations\{
-    AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
-    OutputTimeUnit
-};
+    OutputTimeUnit,
+    Warmup};
 use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 /**
@@ -40,6 +39,7 @@ class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write", "symfony", "phpredis", "phpredis_write"})
      */
     public function benchWriteToCache()
@@ -51,6 +51,7 @@ class SymfonyCachePhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"read", "symfony", "phpredis", "phpredis_read"})
      */
     public function benchReadFromCache()

@@ -8,13 +8,12 @@ use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractRedisCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
 use PB\Cli\SmartBench\Config\AppConfig;
-use PhpBench\Benchmark\Metadata\Annotations\{
-    AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
     OutputTimeUnit,
-};
+    Warmup};
 use Stash\Driver\Redis;
 use Stash\Pool;
 
@@ -41,6 +40,7 @@ class StashPhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write", "stash", "phpredis", "phpredis_write"})
      */
     public function benchWriteToCache()
@@ -52,6 +52,7 @@ class StashPhpRedisBench extends AbstractRedisCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"read", "stash", "phpredis", "phpredis_read"})
      */
     public function benchReadFromCache()

@@ -7,13 +7,12 @@ namespace PB\Cli\SmartBench\Benchmark\CacheLibrary\SymfonyCache;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\AbstractFilesystemCacheLibraryBench;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\CacheLibraryConstant;
 use PB\Cli\SmartBench\Benchmark\CacheLibrary\Traits\Psr6Trait;
-use PhpBench\Benchmark\Metadata\Annotations\{
-    AfterClassMethods,
+use PhpBench\Benchmark\Metadata\Annotations\{AfterClassMethods,
     BeforeClassMethods,
     BeforeMethods,
     Groups,
-    OutputTimeUnit
-};
+    OutputTimeUnit,
+    Warmup};
 use Symfony\Component\Cache\Adapter\{FilesystemAdapter};
 
 /**
@@ -40,6 +39,7 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @@Warmup(2)
      * @Groups({"write", "symfony", "filesystem", "filesystem_write"})
      */
     public function benchWriteToCache()
@@ -51,6 +51,7 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"read", "symfony", "filesystem", "filesystem_read"})
      */
     public function benchReadFromCache()

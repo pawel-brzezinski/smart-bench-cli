@@ -14,6 +14,7 @@ use PhpBench\Benchmark\Metadata\Annotations\{
     BeforeMethods,
     Groups,
     OutputTimeUnit,
+    Warmup
 };
 use Stash\Driver\Memcache;
 use Stash\Pool;
@@ -41,6 +42,7 @@ class StashMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"write", "stash", "memcached", "memcached_write"})
      */
     public function benchWriteToCache()
@@ -52,6 +54,7 @@ class StashMemcachedBench extends AbstractMemcachedCacheLibraryBench
     /**
      * @BeforeMethods({"initCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
+     * @Warmup(2)
      * @Groups({"read", "stash", "memcached", "memcached_read"})
      */
     public function benchReadFromCache()
