@@ -39,7 +39,7 @@ class SymfonyCacheFilesystemBench extends AbstractFilesystemCacheLibraryBench
     /**
      * @BeforeMethods({"initCache", "initWriteCache"})
      * @OutputTimeUnit("milliseconds", precision=3)
-     * @@Warmup(2)
+     * @Warmup(2)
      * @Groups({"write", "symfony", "filesystem", "filesystem_write"})
      */
     public function benchWriteToCache()

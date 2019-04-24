@@ -7,6 +7,12 @@
             "title": "PHP cache libraries benchmark",
             "description": "Benchmark for PHP cache libraries",
             "cols": [ "benchmark", "subject", "its", "revs", "mem_peak", "best", "worst", "mode" ]
+        },
+        "serializer_library": {
+            "extends": "aggregate",
+            "title": "PHP serializer libraries benchmark",
+            "description": "Benchmark for PHP serializer libraries",
+            "cols": [ "benchmark", "subject", "its", "revs", "mem_peak", "best", "worst", "mode" ]
         }
     }
 }

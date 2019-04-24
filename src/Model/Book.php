@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace PB\Cli\SmartBench\Model;
 
+/**
+ * Example model.
+ *
+ * @author Paweł Brzeziński <pawel.brzezinski@smartint.pl>
+ */
 class Book
 {
     /**
@@ -41,6 +46,16 @@ class Book
      */
     private $price;
 
+    /**
+     * Book constructor.
+     *
+     * @param BookCategory $category
+     * @param string $title
+     * @param string $lang
+     * @param string $author
+     * @param int $year
+     * @param float $price
+     */
     public function __construct(BookCategory $category, string $title, string $lang, string $author, int $year, float $price)
     {
         $this->category = $category;

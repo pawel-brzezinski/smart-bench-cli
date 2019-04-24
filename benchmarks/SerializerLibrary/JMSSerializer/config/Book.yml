@@ -1,0 +1,16 @@
+PB\Cli\SmartBench\Model\Book:
+    properties:
+        id:
+            type: int
+        category:
+            type: PB\Cli\SmartBench\Model\BookCategory
+        title:
+            type: string
+        lang:
+            type: string
+        author:
+            type: string
+        year:
+            type: int
+        price:
+            type: float

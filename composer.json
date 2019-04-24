@@ -22,6 +22,8 @@
     },
     "require": {
         "php": "^7.2",
+        "ext-apcu": "*",
+        "ext-dom": "*",
         "ext-memcached": "*",
         "ext-redis": "*",
         "phpbench/phpbench": "^0.15.0",
@@ -37,7 +39,12 @@
         "matthiasmullie/scrapbook": "^1.4",
         "tedivm/stash": "^0.15.1",
         "guzzlehttp/guzzle": "^6.3",
-        "pawel-brzezinski/scrapbook-tag-component": "dev-master"
+        "pawel-brzezinski/scrapbook-tag-component": "dev-master",
+        "symfony/serializer": "^4.2",
+        "symfony/property-access": "^4.2",
+        "jms/serializer": "^2.2",
+        "better-serializer/better-serializer": "^0.1.1",
+        "thunderer/serializard": "^0.3.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5"

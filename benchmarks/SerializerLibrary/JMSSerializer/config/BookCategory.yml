@@ -1,0 +1,6 @@
+PB\Cli\SmartBench\Model\BookCategory:
+    properties:
+        id:
+            type: int
+        name:
+            type: string
