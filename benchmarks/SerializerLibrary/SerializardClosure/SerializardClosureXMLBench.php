@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PB\Cli\SmartBench\Benchmark\SerializerLibrary\SerializardReflection;
+namespace PB\Cli\SmartBench\Benchmark\SerializerLibrary\SerializardClosure;
 
 use PB\Cli\SmartBench\Benchmark\SerializerLibrary\AbstractSerializardLibraryBench;
 use PB\Cli\SmartBench\Model\Book;
