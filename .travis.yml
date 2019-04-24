@@ -19,6 +19,7 @@ before_install:
 
 before_script:
     - cp app/config.yaml.dist app/config.yaml
+    - echo "extension = apcu.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then wget https://github.com/infection/infection/releases/download/0.12.2/infection.phar; fi
